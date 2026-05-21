@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>📐 ShapeVision</h1>
+  <h1>ShapeVision</h1>
   <p><strong>Hệ thống Trí tuệ Nhân tạo Nhận diện và Phân tích Hình học 2D</strong></p>
 
   <div>
