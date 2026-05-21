@@ -1,0 +1,248 @@
+.workspace {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #fcf9f8;
+  font-family: var(--font-inter), sans-serif;
+  overflow: hidden;
+}
+
+/* Blue Topbar */
+.topbar {
+  height: 56px;
+  background-color: #3b74b6; /* Changed to match image blue color slightly muted */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topbarSubtitle {
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.topbarRight {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.iconBtn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Layout */
+.mainLayout {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 56px);
+}
+
+/* Left Sidebar */
+.sidebar {
+  width: 320px;
+  background-color: #f1f3f4; /* Nền xám nhạt */
+  border-right: 1px solid #e5e2e1;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 24px;
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.sidebarTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1c2b42; /* Màu xanh đen đậm */
+  margin: 0 0 16px 0;
+}
+
+/* Accordions */
+.accordionGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.accordionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.accordionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0 16px 24px;
+}
+
+.shapeItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+/* Distribution Chart */
+.distributionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.pieChart {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  transform: rotate(-90deg); /* Start at top */
+}
+
+.pieSegment {
+  /* No animation needed, just static */
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: flex-start;
+  padding-left: 24px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.legendColor {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* Canvas Area */
+.canvasArea {
+  flex: 1;
+  position: relative;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.canvasGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, #e5e2e1 1px, transparent 1px),
+    linear-gradient(to bottom, #e5e2e1 1px, transparent 1px);
+}
+
+/* Floating Toolbar */
+.floatingToolbar {
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.toolItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolBtn, .toolBtnActive {
+  width: 36px;
+  height: 36px;
+  background-color: #1a3258; /* Xanh đậm */
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.toolBtnActive {
+  background-color: #3b74b6; /* Xanh sáng hơn khi active */
+}
+
+.toolBtn:hover {
+  background-color: #2a4a7f;
+}
+
+.tooltip {
+  background-color: #2c2c2c;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Canvas Graphics */
+.canvasContent {
+  position: relative;
+  z-index: 5;
+}
+
+.graphicSvg {
+  display: block;
+}

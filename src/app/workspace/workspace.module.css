@@ -1,0 +1,115 @@
+.workspaceContainer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dadce0;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a73e8;
+}
+
+.nav {
+  display: flex;
+  gap: 24px;
+}
+
+.navItem {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5f6368;
+  cursor: pointer;
+}
+
+.navItem:hover {
+  color: #1a1a1a;
+}
+
+.mainContent {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.heroBanner {
+  background-color: #e8f0fe;
+  border-radius: 12px;
+  padding: 48px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bannerText h1 {
+  font-size: 32px;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.bannerText p {
+  color: #5f6368;
+  margin-bottom: 24px;
+  max-width: 400px;
+}
+
+.primaryButton {
+  background-color: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cardsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  background-color: #e8f0fe;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.cardText h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #1a1a1a;
+}
+
+.cardText p {
+  font-size: 14px;
+  color: #5f6368;
+  margin: 0;
+}

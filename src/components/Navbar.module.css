@@ -1,0 +1,141 @@
+.navbar {
+  height: 60px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e2e1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f6f3f2;
+  border: 1px solid #dcd9d9;
+  border-radius: 20px;
+  padding: 0 16px;
+  width: 400px;
+  height: 40px;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+  color: #1a1a1a;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.searchInput::placeholder {
+  color: #5f6368;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navLink {
+  color: #5f6368;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #1a73e8;
+}
+
+.primaryButton {
+  background-color: #1a73e8;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primaryButton:hover {
+  background-color: #1557b0;
+}
+
+.userContainer {
+  position: relative;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.userInfo:hover {
+  background-color: #f8f9fa;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e5eefc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.navLinksCenter {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navLinkButton {
+  color: #5f6368;
+  font-size: 14px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-inter), sans-serif;
+  transition: color 0.2s;
+}
+
+.navLinkButton:hover {
+  color: #1a73e8;
+}

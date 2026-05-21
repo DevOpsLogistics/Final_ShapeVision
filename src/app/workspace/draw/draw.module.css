@@ -1,0 +1,365 @@
+.workspace {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #fcf9f8;
+  font-family: var(--font-inter), sans-serif;
+  overflow: hidden;
+}
+
+/* Topbar */
+.topbar {
+  height: 56px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f1f3f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.topbarLeft, .topbarCenter, .topbarRight {
+  display: flex;
+  align-items: center;
+}
+
+.topbarLeft {
+  gap: 16px;
+}
+
+.logo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: #f1f3f4;
+}
+
+.documentName {
+  font-size: 14px;
+  color: #5f6368;
+  font-weight: 500;
+}
+
+.topbarCenter {
+  gap: 16px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toolGroup {
+  display: flex;
+  background-color: #f6f3f2;
+  border-radius: 4px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.toolBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #5f6368;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toolBtn:hover {
+  background-color: #e5e2e1;
+  color: #1a1a1a;
+}
+
+.toolBtn.active {
+  background-color: #1a73e8;
+  color: #ffffff;
+}
+
+.topbarRight {
+  gap: 16px;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f6f3f2;
+  border: 1px solid #e5e2e1;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1c1b1b;
+  cursor: pointer;
+}
+
+.actionBtn:hover {
+  background-color: #e5e2e1;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: #5f6368;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.iconBtn:hover {
+  background-color: #f6f3f2;
+}
+
+/* Main Layout */
+.mainLayout {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 56px);
+}
+
+/* Sidebars */
+.leftSidebar, .rightSidebar {
+  width: 280px; /* or 320px depending on specific need, keeping it compact for draft */
+  background-color: #ffffff;
+  border-right: 1px solid #f1f3f4;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.rightSidebar {
+  border-right: none;
+  border-left: 1px solid #f1f3f4;
+}
+
+.sidebarHeader {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 8px;
+  border-bottom: 1px solid #f1f3f4;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Layers list */
+.layerList {
+  padding: 8px;
+}
+
+.layerItem {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.layerItem:hover {
+  background-color: #f6f3f2;
+}
+
+.layerActive {
+  background-color: #e8f0fe;
+}
+
+.layerActive:hover {
+  background-color: #d2e3fc;
+}
+
+.layerName {
+  flex: 1;
+  font-size: 13px;
+  color: #1c1b1b;
+}
+
+.layerActive .layerName {
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.layerVisibility {
+  color: #5f6368;
+  font-size: 14px;
+}
+
+/* Canvas Area */
+.canvasArea {
+  flex: 1;
+  position: relative;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.canvasGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 20px 20px, 4px 4px;
+  background-image: 
+    linear-gradient(to right, #f1f3f4 1px, transparent 1px),
+    linear-gradient(to bottom, #f1f3f4 1px, transparent 1px),
+    linear-gradient(to right, #fcf9f8 1px, transparent 1px),
+    linear-gradient(to bottom, #fcf9f8 1px, transparent 1px);
+}
+
+.axisX {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #dcd9d9;
+}
+
+.axisY {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background-color: #dcd9d9;
+}
+
+.drawingLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Properties Sidebar */
+.propertySection {
+  padding: 16px;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.sectionTitle {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #5f6368;
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+
+.propertyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  background-color: #f6f3f2;
+  border: 1px solid #f1f3f4;
+  border-radius: 4px;
+  padding: 0 8px;
+  height: 32px;
+}
+
+.inputGroup label {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 12px;
+  color: #5f6368;
+  margin-right: 8px;
+}
+
+.inputGroup input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 13px;
+  color: #1a1a1a;
+  width: 100%;
+}
+
+.analysisRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.analysisRow span:first-child {
+  font-size: 13px;
+  color: #5f6368;
+}
+
+.analysisValue {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 13px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.styleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #1c1b1b;
+}
+
+.colorPicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f6f3f2;
+  border: 1px solid #f1f3f4;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.colorBox {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+.colorPicker span {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 12px;
+}
+
+.weightSelector input {
+  width: 60px;
+  height: 28px;
+  background-color: #f6f3f2;
+  border: 1px solid #f1f3f4;
+  border-radius: 4px;
+  text-align: center;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 12px;
+  outline: none;
+}

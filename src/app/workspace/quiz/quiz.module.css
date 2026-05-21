@@ -1,0 +1,193 @@
+.workspace {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f6f3f2;
+  font-family: var(--font-inter), sans-serif;
+  overflow: hidden;
+}
+
+/* Topbar */
+.topbar {
+  height: 56px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  flex-shrink: 0;
+  z-index: 10;
+  border-bottom: 1px solid #e5e2e1;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1a569d; /* Match the dark blue color from image */
+  margin: 0;
+}
+
+/* Main Layout */
+.mainLayout {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 56px);
+}
+
+/* Left Sidebar */
+.sidebar {
+  width: 320px;
+  background-color: #f6f3f2;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 16px;
+  gap: 16px;
+  border-right: 1px solid #e5e2e1;
+  z-index: 5;
+  overflow-y: auto;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e5e2e1;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.statusRow:last-child {
+  margin-bottom: 0;
+}
+
+.iconTrophy {
+  font-size: 20px;
+}
+
+.statusText {
+  font-size: 16px;
+  color: #1a1a1a;
+}
+
+.questionText {
+  font-size: 15px;
+  color: #1a1a1a;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.historyTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+}
+
+.historyList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+}
+
+.divider {
+  height: 1px;
+  background-color: #f1f3f4;
+  margin: 12px 0;
+}
+
+.submitButton {
+  width: 100%;
+  height: 44px;
+  background-color: #1a73e8;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.submitButton:hover {
+  background-color: #1557b0;
+}
+
+/* Canvas Area */
+.canvasArea {
+  flex: 1;
+  position: relative;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.canvasGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, #dcd9d9 1px, transparent 1px),
+    linear-gradient(to bottom, #dcd9d9 1px, transparent 1px);
+}
+
+.drawingContainer {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawingSvg {
+  width: 400px;
+  height: 300px;
+  margin-bottom: 20px; /* Space for feedback box */
+}
+
+.feedbackBox {
+  background-color: #e6f0fa; /* Light blue matching image */
+  border: 1px solid #b8d1ea;
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: #1a1a1a;
+  font-size: 14px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}

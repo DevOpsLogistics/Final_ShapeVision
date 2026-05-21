@@ -1,0 +1,267 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f6f3f2;
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e2e1;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 240px; /* Match sidebar width somewhat */
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e5eefc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.greeting {
+  display: flex;
+  flex-direction: column;
+}
+
+.greetingText {
+  font-size: 12px;
+  color: #5f6368;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  border: 1px solid #dcd9d9;
+  border-radius: 20px;
+  padding: 0 16px;
+  width: 400px;
+  height: 40px;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+  color: #1a1a1a;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.searchInput::placeholder {
+  color: #5f6368;
+}
+
+.primaryButton {
+  background-color: #1a73e8;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primaryButton:hover {
+  background-color: #1557b0;
+}
+
+/* Main Layout */
+.mainLayout {
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e2e1;
+  padding: 16px 0;
+  flex-shrink: 0;
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  margin: 0 8px;
+  border-radius: 4px;
+}
+
+.navItem:hover:not(.active) {
+  background-color: #f6f3f2;
+}
+
+.active {
+  background-color: #e8f0fe; /* Light blue */
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.active svg {
+  color: #1a73e8;
+}
+
+.navDivider {
+  height: 1px;
+  background-color: #e5e2e1;
+  margin: 4px 24px;
+}
+
+/* Content Area */
+.content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Project Card */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #dcd9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: #c1c6d6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.cardThumbnail {
+  position: relative;
+  height: 160px;
+  border-bottom: 1px solid #f1f3f4;
+  overflow: hidden;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gridBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, #f1f3f4 1px, transparent 1px),
+    linear-gradient(to bottom, #f1f3f4 1px, transparent 1px);
+  z-index: 0;
+}
+
+.graphic {
+  position: relative;
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+}
+
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.badgeGreen {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+.badgeBlue {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+
+.badgePurple {
+  background-color: #f3e8fd;
+  color: #9334e6;
+}
+
+.badgeYellow {
+  background-color: #fef7e0;
+  color: #b06000;
+}
+
+.cardInfo {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardTime {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #5f6368;
+}

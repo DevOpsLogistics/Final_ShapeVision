@@ -1,0 +1,200 @@
+.workspace {
+  background-color: #0A0C10;
+  min-height: 100vh;
+  color: #D3DDE6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  background-color: #1A73E8;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  gap: 12px;
+}
+
+.topbarSubtitle {
+  font-weight: 400;
+  opacity: 0.8;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.mainLayout {
+  display: flex;
+  flex: 1;
+  padding: 24px;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.leftColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rightColumn {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  background-color: #11141A;
+  border: 1px solid #1E232B;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.metricBox {
+  background-color: #161A22;
+  border: 1px solid #1E232B;
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: #8DA3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1A73E8;
+}
+
+.layersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.layerItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #161A22;
+  border: 1px solid #1E232B;
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+
+.layerItem:hover {
+  border-color: #1A73E8;
+}
+
+.layerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.layerId {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: #1A73E8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.layerName {
+  font-weight: 500;
+  color: #FFFFFF;
+}
+
+.layerDetails {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #8DA3B8;
+}
+
+.detailTag {
+  background-color: rgba(26, 115, 232, 0.1);
+  color: #669DF6;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.featureBox {
+  aspect-ratio: 1;
+  background-color: #161A22;
+  border: 1px solid #1E232B;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.featureBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+}
+
+.featureBox svg {
+  color: #4C566A;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  background-color: #0A0C10;
+}
