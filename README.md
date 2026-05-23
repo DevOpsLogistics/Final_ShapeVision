@@ -22,7 +22,7 @@ Thay vì chỉ là một ứng dụng vẽ thông thường, ShapeVision hoạt 
 
 ---
 
-##  Tính năng Nhận diện Nổi bậ
+##  Tính năng Nhận diện Nổi bật
 
 *   ** Động cơ Nhận diện Hình học (AI Auto-Beautify)**: Vẽ tự do trên không gian canvas, hệ thống Backend AI sẽ phân tích ngay lập tức tọa độ mảng của bạn, phân loại và tái cấu trúc các đường nét thô kệch thành các dạng hình học tiêu chuẩn: *Hình Chữ Nhật, Hình Vuông, Hình Tròn, Hình Tam Giác, Hình Lục Giác*.
 *   ** Hệ thống Chấm điểm Hình học (Smart Quiz)**: Trình đánh giá hình học thông minh tự động sinh ra các bài kiểm tra. Thuật toán AI sẽ tiến hành so khớp (Shape Matching) nét vẽ của bạn với ma trận hình tiêu chuẩn và trả về điểm số độ chính xác (thang điểm 0 - 100).
