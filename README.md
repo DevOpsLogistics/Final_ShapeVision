@@ -94,7 +94,7 @@ xychart-beta
 *(Đường đi lên: Độ chính xác Accuracy tăng dần. Đường đi xuống: Sai số Loss giảm dần. Bằng chứng cho thấy AI thực sự "có học" chứ không đoán mò)*
 
 **Ma trận nhầm lẫn (Confusion Matrix)**
-Bảng lưới (Heatmap) thể hiện tỷ lệ AI nhận diện đúng/sai giữa các hình cơ bản:
+ thể hiện tỷ lệ AI nhận diện đúng/sai giữa các hình cơ bản:
 
 | Thực tế \ Dự đoán | Hình Tròn | Hình Tam Giác | Hình Vuông | Hình Lục Giác |
 | :--- | :---: | :---: | :---: | :---: |
