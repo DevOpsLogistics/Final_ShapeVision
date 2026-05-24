@@ -99,14 +99,12 @@ async def analyze_contour(data: ImageData):
     # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
-    # Apply Gaussian blur
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    
-    # Canny Edge Detection
-    edges = cv2.Canny(blurred, 50, 150)
+    _, thresh = cv2.threshold(gray, 245, 255, cv2.THRESH_BINARY_INV)
+    kernel = np.ones((5,5), np.uint8)
+    dilated = cv2.dilate(thresh, kernel, iterations=2)
     
     # Find contours
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     total_contours = 0
     
@@ -127,6 +125,7 @@ async def analyze_contour(data: ImageData):
                     "Triangle": "Hình tam giác",
                     "Square": "Hình vuông",
                     "Rectangle": "Hình chữ nhật",
+                    "Rhombus": "Hình thoi",
                     "Pentagon": "Hình ngũ giác",
                     "Hexagon": "Hình lục giác",
                     "Heptagon": "Hình thất giác",
@@ -172,16 +171,12 @@ async def detect_multi(data: ImageData):
     
     # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     
-    # Use adaptive thresholding alongside Canny for better detection of objects like a black tablet
-    edges = cv2.Canny(blurred, 20, 80) # Lowered thresholds for dark objects
+    _, thresh = cv2.threshold(gray, 245, 255, cv2.THRESH_BINARY_INV)
+    kernel = np.ones((5,5), np.uint8)
+    dilated = cv2.dilate(thresh, kernel, iterations=2)
     
-    # Also add a thresholded version to catch filled black rectangles
-    _, thresh = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY_INV)
-    combined = cv2.bitwise_or(edges, thresh)
-    
-    contours, _ = cv2.findContours(combined, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     obj_count = 0
     for c in contours:
@@ -202,6 +197,7 @@ async def detect_multi(data: ImageData):
                     "Triangle": "Hình tam giác",
                     "Square": "Hình vuông",
                     "Rectangle": "Hình chữ nhật",
+                    "Rhombus": "Hình thoi",
                     "Pentagon": "Hình ngũ giác",
                     "Hexagon": "Hình lục giác",
                     "Heptagon": "Hình thất giác",
@@ -241,14 +237,17 @@ async def recognize_region(data: ImageData):
     if img is None:
         return {"error": "Invalid image"}
         
+    # Process image for better contour detection (robust to thin red lines)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    edges = cv2.Canny(blurred, 20, 80)
     
-    _, thresh = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY_INV)
-    combined = cv2.bitwise_or(edges, thresh)
+    # Simple thresholding instead of adaptive, to catch non-white drawn lines reliably
+    _, thresh = cv2.threshold(gray, 245, 255, cv2.THRESH_BINARY_INV)
     
-    contours, _ = cv2.findContours(combined, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Dilate heavily to close gaps and absorb dots
+    kernel = np.ones((5,5), np.uint8)
+    dilated = cv2.dilate(thresh, kernel, iterations=2)
+    
+    contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     if not contours:
         return {"predictions": [{"label": "Không tìm thấy hình khối", "score": 0}]}

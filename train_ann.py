@@ -115,7 +115,7 @@ def train_model():
     X_test_scaled = scaler.transform(X_test)
     
     print("Training ANN model...")
-    mlp = MLPClassifier(hidden_layer_sizes=(128, 64), max_iter=2000, random_state=42, activation='relu')
+    mlp = MLPClassifier(hidden_layer_sizes=(128, 128), max_iter=5000, random_state=42, activation='relu', early_stopping=False)
     mlp.fit(X_train_scaled, y_train)
     
     print("Evaluating...")
