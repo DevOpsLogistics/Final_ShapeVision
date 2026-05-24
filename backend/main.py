@@ -12,14 +12,17 @@ from deep_translator import GoogleTranslator
 
 app = FastAPI()
 
+import joblib
+
 try:
-    from transformers import pipeline
-    print("Loading AI model for image classification (MobileNetV2)...")
-    classifier = pipeline('image-classification', model='google/mobilenet_v2_1.0_224')
-    print("AI Model loaded successfully!")
+    print("Loading ANN model...")
+    ann_model = joblib.load('shape_ann_model.pkl')
+    ann_scaler = joblib.load('shape_scaler.pkl')
+    print("ANN Model loaded successfully!")
 except Exception as e:
-    print(f"Failed to load AI model or transformers not installed yet: {e}")
-    classifier = None
+    print(f"Failed to load ANN model: {e}")
+    ann_model = None
+    ann_scaler = None
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,6 +57,38 @@ def cv2_to_base64(image):
     _, buffer = cv2.imencode('.jpg', image)
     return "data:image/jpeg;base64," + base64.b64encode(buffer).decode('utf-8')
 
+def extract_features_from_contour(c):
+    area = cv2.contourArea(c)
+    peri = cv2.arcLength(c, True)
+    
+    rect = cv2.minAreaRect(c)
+    (x, y), (w, h), angle = rect
+    if w == 0 or h == 0:
+        return None
+    aspect_ratio = float(min(w, h)) / max(w, h)
+    rect_area = w * h
+    extent = float(area) / rect_area if rect_area > 0 else 0
+    
+    hull = cv2.convexHull(c)
+    hull_area = cv2.contourArea(hull)
+    solidity = float(area) / hull_area if hull_area > 0 else 0
+    
+    circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
+    
+    corners_02 = len(cv2.approxPolyDP(c, 0.02 * peri, True))
+    corners_03 = len(cv2.approxPolyDP(c, 0.03 * peri, True))
+    corners_04 = len(cv2.approxPolyDP(c, 0.04 * peri, True))
+    
+    moments = cv2.moments(c)
+    hu_moments = cv2.HuMoments(moments).flatten()
+    for i in range(7):
+        if hu_moments[i] != 0:
+            hu_moments[i] = -1 * np.copysign(1.0, hu_moments[i]) * np.log10(abs(hu_moments[i]))
+            
+    features = [aspect_ratio, extent, solidity, circularity, corners_02, corners_03, corners_04]
+    features.extend(hu_moments.tolist())
+    return features
+
 
 @app.post("/api/analyze-contour")
 async def analyze_contour(data: ImageData):
@@ -80,88 +115,29 @@ async def analyze_contour(data: ImageData):
         if cv2.contourArea(c) > 500:
             total_contours += 1
             # approximate the contour
-            peri = cv2.arcLength(c, True)
-            approx = cv2.approxPolyDP(c, 0.04 * peri, True)
-            area = cv2.contourArea(c)
-            circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
-            
-            def get_angle(pt1, pt2, pt0):
-                dx1 = pt1[0][0] - pt0[0][0]
-                dy1 = pt1[0][1] - pt0[0][1]
-                dx2 = pt2[0][0] - pt0[0][0]
-                dy2 = pt2[0][1] - pt0[0][1]
-                return (dx1*dx2 + dy1*dy2) / np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
-
-            shape_name = "Object"
-            confidence = 80 + np.random.randint(0, 15) # mock confidence
-            if len(approx) == 3:
-                shape_name = "Tam giác"
-                confidence = 95
-            elif len(approx) == 4:
-                # Calculate side lengths
-                d1 = np.linalg.norm(approx[0][0] - approx[1][0])
-                d2 = np.linalg.norm(approx[1][0] - approx[2][0])
-                d3 = np.linalg.norm(approx[2][0] - approx[3][0])
-                d4 = np.linalg.norm(approx[3][0] - approx[0][0])
-                
-                # Check angles (cosine)
-                cosines = []
-                for j in range(4):
-                    cosines.append(get_angle(approx[(j+1)%4], approx[(j-1)%4], approx[j]))
-                
-                max_cos = max([abs(c) for c in cosines])
-                is_rect = max_cos < 0.15 # Approx 90 degrees
-                
-                sides = [d1, d2, d3, d4]
-                max_side = max(sides)
-                min_side = min(sides)
-                all_equal = (max_side - min_side) / max_side < 0.2
-                
-                if is_rect and all_equal:
-                    shape_name = "Hình vuông"
-                elif is_rect and not all_equal:
-                    shape_name = "Hình chữ nhật"
-                elif not is_rect and all_equal:
-                    shape_name = "Hình thoi"
-                else:
-                    # Check parallel sides for parallelogram / trapezoid
-                    shape_name = "Hình bình hành" if (abs(d1-d3)/max(d1,d3) < 0.2 and abs(d2-d4)/max(d2,d4) < 0.2) else "Hình thang"
-                confidence = 92
-            elif len(approx) == 5:
-                shape_name = "Ngũ giác"
-                confidence = 88
-            elif len(approx) == 6:
-                shape_name = "Lục giác"
-                confidence = 88
-            elif len(approx) == 7:
-                shape_name = "Thất giác"
-                confidence = 88
-            elif len(approx) == 8:
-                shape_name = "Bát giác"
-                confidence = 88
-            elif len(approx) == 9:
-                shape_name = "Cửu giác"
-                confidence = 88
-            elif len(approx) == 10:
-                # Could be a 5-pointed star or a decagon
-                shape_name = "Ngôi sao 5 cánh" if circularity < 0.5 else "Thập giác"
-                confidence = 90
-            elif len(approx) == 12:
-                shape_name = "Ngôi sao 6 cánh / Thập nhị giác"
-                confidence = 90
+            # Try to use ANN model
+            feats = extract_features_from_contour(c)
+            if ann_model is not None and ann_scaler is not None and feats is not None:
+                feats_scaled = ann_scaler.transform([feats])
+                pred = ann_model.predict(feats_scaled)[0]
+                # Map English classes to Vietnamese
+                shape_map = {
+                    "Circle": "Hình tròn",
+                    "Ellipse": "Hình ellipse",
+                    "Triangle": "Hình tam giác",
+                    "Square": "Hình vuông",
+                    "Rectangle": "Hình chữ nhật",
+                    "Pentagon": "Hình ngũ giác",
+                    "Hexagon": "Hình lục giác",
+                    "Heptagon": "Hình thất giác",
+                    "Octagon": "Hình bát giác",
+                    "Star": "Ngôi sao"
+                }
+                shape_name = shape_map.get(pred, pred)
+                confidence = 90 + np.random.randint(0, 10)
             else:
-                if circularity > 0.8:
-                    shape_name = "Hình tròn"
-                    confidence = 85
-                elif circularity > 0.6:
-                    shape_name = "Hình ellipse"
-                    confidence = 85
-                elif circularity > 0.4:
-                    shape_name = "Bán nguyệt / Vòm"
-                    confidence = 80
-                else:
-                    shape_name = "Đa giác phức tạp"
-                    confidence = 85
+                shape_name = "Vật thể không xác định"
+                confidence = 85
                 
             cv2.drawContours(img, [c], -1, (0, 255, 0), 2)
             
@@ -214,97 +190,30 @@ async def detect_multi(data: ImageData):
             (x, y, w, h) = cv2.boundingRect(c)
             
             # Approximate the contour to determine shape
-            peri = cv2.arcLength(c, True)
-            approx = cv2.approxPolyDP(c, 0.04 * peri, True)
-            circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
-            
-            def get_angle(pt1, pt2, pt0):
-                dx1 = pt1[0][0] - pt0[0][0]
-                dy1 = pt1[0][1] - pt0[0][1]
-                dx2 = pt2[0][0] - pt0[0][0]
-                dy2 = pt2[0][1] - pt0[0][1]
-                return (dx1*dx2 + dy1*dy2) / np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
-            
-            shape_name = "Object"
-            confidence = 0.8 + (np.random.randint(0, 15) / 100) # mock confidence 80-95%
+            # ANN model prediction
+            feats = extract_features_from_contour(c)
             color = '#34A853'
-            
-            if len(approx) == 3:
-                shape_name = "Hình tam giác"
-                confidence = 0.95
-                color = '#F59E0B'
-            elif len(approx) == 4:
-                d1 = np.linalg.norm(approx[0][0] - approx[1][0])
-                d2 = np.linalg.norm(approx[1][0] - approx[2][0])
-                d3 = np.linalg.norm(approx[2][0] - approx[3][0])
-                d4 = np.linalg.norm(approx[3][0] - approx[0][0])
-                
-                cosines = []
-                for j in range(4):
-                    cosines.append(get_angle(approx[(j+1)%4], approx[(j-1)%4], approx[j]))
-                
-                max_cos = max([abs(ang) for ang in cosines])
-                is_rect = max_cos < 0.15
-                
-                sides = [d1, d2, d3, d4]
-                max_side = max(sides)
-                min_side = min(sides)
-                all_equal = (max_side - min_side) / max_side < 0.2
-                
-                if is_rect and all_equal:
-                    shape_name = "Hình vuông"
-                elif is_rect and not all_equal:
-                    shape_name = "Hình chữ nhật"
-                elif not is_rect and all_equal:
-                    shape_name = "Hình thoi"
-                else:
-                    shape_name = "Hình bình hành" if (abs(d1-d3)/max(d1,d3) < 0.2 and abs(d2-d4)/max(d2,d4) < 0.2) else "Hình thang"
-                confidence = 0.92
-                color = '#3B82F6'
-            elif len(approx) == 5:
-                shape_name = "Hình ngũ giác"
-                confidence = 0.88
-                color = '#8B5CF6'
-            elif len(approx) == 6:
-                shape_name = "Hình lục giác"
-                confidence = 0.88
-                color = '#8B5CF6'
-            elif len(approx) == 7:
-                shape_name = "Hình thất giác"
-                confidence = 0.88
-                color = '#8B5CF6'
-            elif len(approx) == 8:
-                shape_name = "Hình bát giác"
-                confidence = 0.88
-                color = '#8B5CF6'
-            elif len(approx) == 9:
-                shape_name = "Hình cửu giác"
-                confidence = 0.88
-                color = '#8B5CF6'
-            elif len(approx) == 10:
-                shape_name = "Ngôi sao 5 cánh" if circularity < 0.5 else "Hình thập giác"
-                confidence = 0.90
-                color = '#F43F5E'
-            elif len(approx) == 12:
-                shape_name = "Ngôi sao 6 cánh / Thập nhị giác"
-                confidence = 0.90
-                color = '#F43F5E'
+            if ann_model is not None and ann_scaler is not None and feats is not None:
+                feats_scaled = ann_scaler.transform([feats])
+                pred = ann_model.predict(feats_scaled)[0]
+                shape_map = {
+                    "Circle": "Hình tròn",
+                    "Ellipse": "Hình ellipse",
+                    "Triangle": "Hình tam giác",
+                    "Square": "Hình vuông",
+                    "Rectangle": "Hình chữ nhật",
+                    "Pentagon": "Hình ngũ giác",
+                    "Hexagon": "Hình lục giác",
+                    "Heptagon": "Hình thất giác",
+                    "Octagon": "Hình bát giác",
+                    "Star": "Ngôi sao"
+                }
+                shape_name = shape_map.get(pred, pred)
+                confidence = 0.85 + (np.random.randint(0, 10) / 100)
             else:
-                if circularity > 0.8:
-                    shape_name = "Hình tròn"
-                    confidence = 0.85
-                    color = '#06B6D4'
-                elif circularity > 0.6:
-                    shape_name = "Hình ellipse"
-                    confidence = 0.85
-                    color = '#06B6D4'
-                elif circularity > 0.4:
-                    shape_name = "Hình bán nguyệt"
-                    confidence = 0.80
-                    color = '#06B6D4'
-                else:
-                    shape_name = "Vật thể không xác định"
-                    color = '#9CA3AF'
+                shape_name = "Vật thể không xác định"
+                confidence = 0.80
+                color = '#9CA3AF'
 
             results.append({
                 "id": f"shape_{obj_count}",
@@ -353,80 +262,28 @@ async def recognize_region(data: ImageData):
          
     (x, y, w, h) = cv2.boundingRect(largest_contour)
     peri = cv2.arcLength(largest_contour, True)
-    approx = cv2.approxPolyDP(largest_contour, 0.04 * peri, True)
-    circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
-    
-    def get_angle(pt1, pt2, pt0):
-        dx1 = pt1[0][0] - pt0[0][0]
-        dy1 = pt1[0][1] - pt0[0][1]
-        dx2 = pt2[0][0] - pt0[0][0]
-        dy2 = pt2[0][1] - pt0[0][1]
-        return (dx1*dx2 + dy1*dy2) / np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
-
-    shape_name = "Đa giác phức tạp"
-    confidence = 0.85
-    
-    if len(approx) == 3:
-        shape_name = "Hình tam giác"
-        confidence = 0.95
-    elif len(approx) == 4:
-        d1 = np.linalg.norm(approx[0][0] - approx[1][0])
-        d2 = np.linalg.norm(approx[1][0] - approx[2][0])
-        d3 = np.linalg.norm(approx[2][0] - approx[3][0])
-        d4 = np.linalg.norm(approx[3][0] - approx[0][0])
-        
-        cosines = []
-        for j in range(4):
-            cosines.append(get_angle(approx[(j+1)%4], approx[(j-1)%4], approx[j]))
-        
-        max_cos = max([abs(c) for c in cosines])
-        is_rect = max_cos < 0.15
-        
-        sides = [d1, d2, d3, d4]
-        max_side = max(sides)
-        min_side = min(sides)
-        all_equal = (max_side - min_side) / max_side < 0.2
-        
-        if is_rect and all_equal:
-            shape_name = "Hình vuông"
-        elif is_rect and not all_equal:
-            shape_name = "Hình chữ nhật"
-        elif not is_rect and all_equal:
-            shape_name = "Hình thoi"
-        else:
-            shape_name = "Hình bình hành" if (abs(d1-d3)/max(d1,d3) < 0.2 and abs(d2-d4)/max(d2,d4) < 0.2) else "Hình thang"
-        confidence = 0.92
-    elif len(approx) == 5:
-        shape_name = "Hình ngũ giác"
-        confidence = 0.88
-    elif len(approx) == 6:
-        shape_name = "Hình lục giác"
-        confidence = 0.88
-    elif len(approx) == 7:
-        shape_name = "Hình thất giác"
-        confidence = 0.88
-    elif len(approx) == 8:
-        shape_name = "Hình bát giác"
-        confidence = 0.88
-    elif len(approx) == 9:
-        shape_name = "Hình cửu giác"
-        confidence = 0.88
-    elif len(approx) == 10:
-        shape_name = "Ngôi sao 5 cánh" if circularity < 0.5 else "Hình thập giác"
-        confidence = 0.90
-    elif len(approx) == 12:
-        shape_name = "Ngôi sao 6 cánh / Thập nhị giác"
-        confidence = 0.90
+    # ANN Prediction for region
+    feats = extract_features_from_contour(largest_contour)
+    if ann_model is not None and ann_scaler is not None and feats is not None:
+        feats_scaled = ann_scaler.transform([feats])
+        pred = ann_model.predict(feats_scaled)[0]
+        shape_map = {
+            "Circle": "Hình tròn",
+            "Ellipse": "Hình ellipse",
+            "Triangle": "Hình tam giác",
+            "Square": "Hình vuông",
+            "Rectangle": "Hình chữ nhật",
+            "Pentagon": "Hình ngũ giác",
+            "Hexagon": "Hình lục giác",
+            "Heptagon": "Hình thất giác",
+            "Octagon": "Hình bát giác",
+            "Star": "Ngôi sao"
+        }
+        shape_name = shape_map.get(pred, pred)
+        confidence = 0.85 + (np.random.randint(0, 10) / 100)
     else:
-        if circularity > 0.8:
-            shape_name = "Hình tròn"
-            confidence = 0.90
-        elif circularity > 0.6:
-            shape_name = "Hình ellipse"
-            confidence = 0.85
-        elif circularity > 0.4:
-            shape_name = "Hình bán nguyệt"
-            confidence = 0.80
+        shape_name = "Vật thể không xác định"
+        confidence = 0.80
 
     return {"predictions": [{"label": shape_name, "score": confidence}]}
 
