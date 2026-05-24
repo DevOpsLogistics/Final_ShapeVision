@@ -1,4 +1,3 @@
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/10d97a7e-eacb-409d-8167-1c2c3258fdfc" /><div align="center">
   <h1>ShapeVision</h1>
   <p><strong>Hệ thống Trí tuệ Nhân tạo Nhận diện và Phân tích Hình học 2D</strong></p>
 
