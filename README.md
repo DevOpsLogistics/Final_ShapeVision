@@ -1,4 +1,4 @@
-<div align="center">
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/10d97a7e-eacb-409d-8167-1c2c3258fdfc" /><div align="center">
   <h1>ShapeVision</h1>
   <p><strong>Hệ thống Trí tuệ Nhân tạo Nhận diện và Phân tích Hình học 2D</strong></p>
 
@@ -22,63 +22,62 @@ Thay vì chỉ là một ứng dụng vẽ thông thường, ShapeVision hoạt 
 
 ---
 
-##  Tính năng Nhận diện Nổi bật
+## Tính năng Nhận diện Nổi bật
 
-*   ** Động cơ Nhận diện Hình học (AI Auto-Beautify)**: Vẽ tự do trên không gian canvas, hệ thống Backend AI sẽ phân tích ngay lập tức tọa độ mảng của bạn, phân loại và tái cấu trúc các đường nét thô kệch thành các dạng hình học tiêu chuẩn: *Hình Chữ Nhật, Hình Vuông, Hình Tròn, Hình Tam Giác, Hình Lục Giác*.
-*   ** Hệ thống Chấm điểm Hình học (Smart Quiz)**: Trình đánh giá hình học thông minh tự động sinh ra các bài kiểm tra. Thuật toán AI sẽ tiến hành so khớp (Shape Matching) nét vẽ của bạn với ma trận hình tiêu chuẩn và trả về điểm số độ chính xác (thang điểm 0 - 100).
-*   ** Không gian Vẽ Chuyên nghiệp (Advanced Workspace)**: 
-    *   Sử dụng công nghệ SVG tạo ra một Canvas vô tận với hệ thống lưới (Grid snapping).
-    *   Quản lý theo Lớp (Layers): Dễ dàng thêm, chọn, thay đổi hoặc xóa các lớp hình vẽ hoàn toàn độc lập.
-    *   Cục tẩy thông minh (Smart Eraser): Cho phép xóa chính xác từng hình học cụ thể trên màn hình chỉ bằng một cú click chuột.
-    *   Bảng Thuộc tính (Properties Panel): Hiển thị và cập nhật theo thời gian thực các thông số toán học như Tọa độ tâm (Center X, Center Y), Kích thước (Width, Height), Bán kính (Radius) và số điểm đỉnh (Points).
-*   ** Xác thực Người dùng & Hồ sơ (Authentication)**: Đăng nhập và đăng ký mượt mà. Hệ thống hỗ trợ xử lý và lưu trữ ảnh đại diện cá nhân, đảm bảo đồng bộ hoàn hảo giữa các phiên đăng nhập khác nhau.
-*   ** Tải lên Đa tập tin (Multi-file Upload)**: Tính năng đặc biệt cho phép kéo thả và tải lên nhiều tập tin cùng lúc, tiện lợi cho việc quản lý tài nguyên hoặc chèn nội dung vào workspace.
-*   ** Giao diện Hiện đại, Tinh tế (UI/UX)**: Hỗ trợ Chế độ Sáng/Tối (Dark/Light mode), các hiệu ứng tương tác vi mô (micro-interactions) mượt mà, và phong cách thiết kế **Glassmorphism (Kính mờ)** cao cấp được xây dựng hoàn toàn bằng CSS thuần (Vanilla CSS Modules) giúp tối ưu hiệu năng.
+* **Động cơ Nhận diện Hình học (AI Auto-Beautify)**: Vẽ tự do trên không gian canvas, hệ thống Backend AI sẽ phân tích ngay lập tức tọa độ mảng của bạn, phân loại và tái cấu trúc các đường nét thô kệch thành các dạng hình học tiêu chuẩn: *Hình Chữ Nhật, Hình Vuông, Hình Tròn, Hình Tam Giác, Hình Lục Giác*.
+* **Hệ thống Chấm điểm Hình học (Smart Quiz)**: Trình đánh giá hình học thông minh tự động sinh ra các bài kiểm tra. Thuật toán AI sẽ tiến hành so khớp (Shape Matching) nét vẽ của bạn với ma trận hình tiêu chuẩn và trả về điểm số độ chính xác (thang điểm 0 - 100).
+* **Không gian Vẽ Chuyên nghiệp (Advanced Workspace)**:
+    * Sử dụng công nghệ SVG tạo ra một Canvas vô tận với hệ thống lưới (Grid snapping).
+    * Quản lý theo Lớp (Layers): Dễ dàng thêm, chọn, thay đổi hoặc xóa các lớp hình vẽ hoàn toàn độc lập.
+    * Cục tẩy thông minh (Smart Eraser): Cho phép xóa chính xác từng hình học cụ thể trên màn hình chỉ bằng một cú click chuột.
+    * Bảng Thuộc tính (Properties Panel): Hiển thị và cập nhật theo thời gian thực các thông số toán học như Tọa độ tâm (Center X, Center Y), Kích thước (Width, Height), Bán kính (Radius) và số điểm đỉnh (Points).
+* **Xác thực Người dùng & Hồ sơ (Authentication)**: Đăng nhập và đăng ký mượt mà. Hệ thống hỗ trợ xử lý và lưu trữ ảnh đại diện cá nhân, đảm bảo đồng bộ hoàn hảo giữa các phiên đăng nhập khác nhau.
+* **Tải lên Đa tập tin (Multi-file Upload)**: Tính năng đặc biệt cho phép kéo thả và tải lên nhiều tập tin cùng lúc, tiện lợi cho việc quản lý tài nguyên hoặc chèn nội dung vào workspace.
+* **Giao diện Hiện đại, Tinh tế (UI/UX)**: Hỗ trợ Chế độ Sáng/Tối (Dark/Light mode), các hiệu ứng tương tác vi mô (micro-interactions) mượt mà, và phong cách thiết kế **Glassmorphism (Kính mờ)** cao cấp được xây dựng hoàn toàn bằng CSS thuần (Vanilla CSS Modules) giúp tối ưu hiệu năng.
 
 ---
 
-##  Công nghệ Sử dụng (Technology Stack)
+## Công nghệ Sử dụng (Technology Stack)
 
 ### Frontend (Giao diện Người dùng)
-*   **Framework**: [Next.js](https://nextjs.org/) 15 (App Router - Cấu trúc thư mục mới nhất)
-*   **UI Library**: [React](https://react.dev/) 19
-*   **Ngôn ngữ**: TypeScript
-*   **Styling**: Vanilla CSS Modules (Viết CSS thuần túy, không sử dụng Framework nặng nề, đảm bảo tùy biến tối đa 100% và tốc độ siêu nhanh)
-*   **Icon**: Lucide React
+
+* **Framework**: [Next.js](https://nextjs.org/) 15 (App Router - Cấu trúc thư mục mới nhất)
+* **UI Library**: [React](https://react.dev/) 19
+* **Ngôn ngữ**: TypeScript
+* **Styling**: Vanilla CSS Modules
+* **Icon**: Lucide React
 
 ### Backend (Máy chủ Trí tuệ Nhân tạo AI)
-*   **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Web framework bằng Python với hiệu năng bất đồng bộ cực cao)
-*   **Học sâu (Deep Learning)**: Mạng Nơ-ron Tích chập (CNNs) xây dựng trên nền tảng TensorFlow / PyTorch
-*   **Tiền xử lý & Trích xuất đặc trưng**: [OpenCV](https://opencv.org/) (`cv2`) & NumPy
-*   **Xác thực Dữ liệu**: Pydantic
+
+* **Framework**: [FastAPI](https://fastapi.tiangolo.com/)
+* **Học sâu (Deep Learning)**: Mạng Nơ-ron Nhân tạo (Artificial Neural Network - ANN) xây dựng trên nền tảng TensorFlow / PyTorch
+* **Tiền xử lý & Trích xuất đặc trưng**: [OpenCV](https://opencv.org/) (`cv2`) & NumPy
+* **Xác thực Dữ liệu**: Pydantic
 
 ---
 
-##  Phân tích Thuật toán & Trí tuệ nhân tạo (Under the Hood)
+## Phân tích Thuật toán & Trí tuệ nhân tạo (Under the Hood)
 
-Điều làm nên sự kỳ diệu của ShapeVision nằm ở Backend Python với hệ thống mô hình học sâu (Deep Learning) tích hợp. Khi người dùng kết thúc một nét vẽ bằng "Bút AI", luồng dữ liệu sẽ đi qua một pipeline mạnh mẽ kết hợp giữa Mạng nơ-ron nhân tạo (Neural Networks) và Thị giác máy tính (Computer Vision):
+Điều làm nên sức mạnh của ShapeVision nằm ở Backend Python với pipeline xử lý kết hợp giữa **Mạng nơ-ron nhân tạo (Artificial Neural Network - ANN)** và **Thị giác máy tính (Computer Vision)**. Khi người dùng kết thúc một nét vẽ bằng "Bút AI", dữ liệu sẽ được tiền xử lý, trích xuất đặc trưng hình học và đưa vào mô hình ANN để phân loại.
 
 ### 1. Lưu đồ thuật toán AI Pipeline
+
 ```mermaid
 flowchart LR
     A[Nét vẽ thô] --> B[Tiền xử lý]
     B --> C[Nhị phân hóa]
-    C --> D[Đưa vào Mạng CNN]
-    D --> E[Trích xuất tham số]
+    C --> D[Trích xuất đặc trưng OpenCV]
+    D --> E[Đưa vào Mạng ANN]
     E --> F[Render kết quả]
 ```
-
 ### 2. Tiền xử lý Dữ liệu & Trích xuất Tham số Không gian
 Các tọa độ điểm vector (strokes) được raster hóa thành ma trận ảnh NumPy. Sử dụng thuật toán `cv2.findContours` và `cv2.convexHull` (Bao lồi) để làm sạch nhiễu tay run. Hệ thống sau đó dùng `cv2.minEnclosingCircle` hoặc `cv2.boundingRect` để bóc tách thông số.
 
 ![Minh họa Convex Hull & Bounding Box](./public/convex_hull.png)
 *(Minh họa Convex Hull & Bounding Box: Ảnh so sánh trực quan cách OpenCV tìm khung chữ nhật bao quanh một nét vẽ, và sợi dây "bao lồi" bao quanh các đỉnh của đa giác)*
-
-### 3. Nhận diện bằng Mạng Nơ-ron Tích chập
-ShapeVision đưa tensor đầu vào chạy qua mạng CNN nhiều lớp đã được huấn luyện. Các lớp Tích chập (Convolutional Layers) và Max Pooling trích xuất đặc trưng, và lớp Fully Connected (hàm Softmax) trả về phân phối xác suất hình học.
-
-![Minh họa Mạng CNN](./public/cnn_architecture.png)
-*(Minh họa Mạng CNN - Convolutional Neural Network: Nét vẽ đi qua các lớp Convolution, Pooling và Fully Connected để bóc tách đặc trưng)*
+### 3. Nhận diện bằng Mạng Nơ-ron Nhân tạo
+ShapeVision đưa các đặc trưng đã chuẩn hóa vào mạng ANN nhiều lớp. Mô hình gồm lớp đầu vào (Input Layer), các lớp ẩn (Hidden Layers), trọng số (Weights), độ lệch (Bias), hàm kích hoạt như ReLU và lớp đầu ra sử dụng Softmax để trả về phân phối xác suất của từng loại hình học.
+<img width="620" height="297" alt="image" src="https://github.com/user-attachments/assets/a9f0a57a-f44f-4dde-9257-4ca344021d53" />
 
 ### 4. Đánh giá Mô hình Học sâu (Model Evaluation)
 
@@ -191,7 +190,4 @@ npm run dev
 ### 3. Trải nghiệm Ứng dụng
 Truy cập vào địa chỉ `http://localhost:3000` trên trình duyệt web của bạn và bắt đầu khám phá!
 
----
 
-##  Giấy phép (License)
-Dự án này được phân phối dưới chứng nhận Giấy phép MIT (MIT License). Bạn có thể thoải mái sao chép, chỉnh sửa và sử dụng cho cả mục đích cá nhân lẫn thương mại.
