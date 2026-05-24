@@ -4,7 +4,7 @@ import numpy as np
 import base64
 import urllib.request
 import io
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -56,6 +56,25 @@ def base64_to_cv2(base64_string):
 def cv2_to_base64(image):
     _, buffer = cv2.imencode('.jpg', image)
     return "data:image/jpeg;base64," + base64.b64encode(buffer).decode('utf-8')
+
+def draw_text_vietnamese(img, text, position, font_size=16, text_color=(0, 255, 0), stroke_color=(255, 255, 255)):
+    img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    draw = ImageDraw.Draw(img_pil)
+    try:
+        font = ImageFont.truetype("arial.ttf", font_size)
+    except IOError:
+        font = ImageFont.load_default()
+        
+    # Draw stroke
+    x, y = position
+    draw.text((x-1, y-1), text, font=font, fill=stroke_color)
+    draw.text((x+1, y-1), text, font=font, fill=stroke_color)
+    draw.text((x-1, y+1), text, font=font, fill=stroke_color)
+    draw.text((x+1, y+1), text, font=font, fill=stroke_color)
+    
+    # Draw text
+    draw.text(position, text, font=font, fill=text_color)
+    return cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
 
 def extract_features_from_contour(c):
     area = cv2.contourArea(c)
@@ -149,8 +168,7 @@ async def analyze_contour(data: ImageData):
                 cX, cY = 0, 0
                 
             text = f"{shape_name} {confidence}%"
-            cv2.putText(img, text, (cX - 20, cY - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 3)
-            cv2.putText(img, text, (cX - 20, cY - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            img = draw_text_vietnamese(img, text, (cX - 20, cY - 20), font_size=18, text_color=(0, 255, 0))
             
     return {
         "processedImage": cv2_to_base64(img),
