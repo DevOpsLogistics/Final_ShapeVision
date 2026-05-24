@@ -150,31 +150,36 @@ export default function WorkspaceUpload() {
       const ctx = canvas.getContext("2d");
       
       if (ctx) {
-        ctx.drawImage(
-          imageRef.current,
-          currentBox.x * scaleX, currentBox.y * scaleY, canvas.width, canvas.height,
-          0, 0, canvas.width, canvas.height
-        );
-        const base64 = canvas.toDataURL("image/jpeg");
-        
-        updateActiveImage(img => ({ ...img, isAiLoading: true }));
-        try {
-          const res = await fetch("http://localhost:8000/api/recognize-region", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ imageBase64: base64 })
-          });
-          const data = await res.json();
-          if (data.predictions) {
-            updateActiveImage(img => ({ ...img, aiResult: data.predictions }));
-          } else if (data.error) {
-            updateActiveImage(img => ({ ...img, aiResult: [{ label: "Lỗi: " + data.error, score: 0 }] }));
+        // Create an image object for the original dataUrl
+        const origImg = new Image();
+        origImg.onload = async () => {
+          ctx.drawImage(
+            origImg,
+            currentBox.x * scaleX, currentBox.y * scaleY, canvas.width, canvas.height,
+            0, 0, canvas.width, canvas.height
+          );
+          const base64 = canvas.toDataURL("image/jpeg");
+          
+          updateActiveImage(img => ({ ...img, isAiLoading: true }));
+          try {
+            const res = await fetch("http://localhost:8000/api/recognize-region", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ imageBase64: base64 })
+            });
+            const data = await res.json();
+            if (data.predictions) {
+              updateActiveImage(img => ({ ...img, aiResult: data.predictions }));
+            } else if (data.error) {
+              updateActiveImage(img => ({ ...img, aiResult: [{ label: "Lỗi: " + data.error, score: 0 }] }));
+            }
+          } catch (err) {
+            console.error(err);
+            updateActiveImage(img => ({ ...img, aiResult: [{ label: "Lỗi kết nối máy chủ", score: 0 }] }));
           }
-        } catch (err) {
-          console.error(err);
-          updateActiveImage(img => ({ ...img, aiResult: [{ label: "Lỗi kết nối máy chủ", score: 0 }] }));
-        }
-        updateActiveImage(img => ({ ...img, isAiLoading: false }));
+          updateActiveImage(img => ({ ...img, isAiLoading: false }));
+        };
+        origImg.src = activeImage.dataUrl;
       }
     } else {
       updateActiveImage(img => ({ ...img, currentBox: null }));

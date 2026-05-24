@@ -92,7 +92,7 @@ async def analyze_contour(data: ImageData):
             elif len(approx) == 4:
                 (x, y, w, h) = cv2.boundingRect(approx)
                 ar = w / float(h)
-                shape_name = "Square" if ar >= 0.95 and ar <= 1.05 else "Rectangle"
+                shape_name = "Square" if 0.85 <= ar <= 1.15 else "Rectangle"
                 confidence = 92
             elif len(approx) == 5:
                 shape_name = "Pentagon"
@@ -100,9 +100,27 @@ async def analyze_contour(data: ImageData):
             elif len(approx) == 6:
                 shape_name = "Hexagon"
                 confidence = 88
+            elif len(approx) == 7:
+                shape_name = "Heptagon"
+                confidence = 88
+            elif len(approx) == 8:
+                shape_name = "Octagon"
+                confidence = 88
+            elif len(approx) == 10:
+                shape_name = "Star"
+                confidence = 90
             else:
-                shape_name = "Circle"
-                confidence = 85
+                area = cv2.contourArea(c)
+                circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
+                if circularity > 0.75:
+                    shape_name = "Circle"
+                    confidence = 85
+                elif circularity > 0.6:
+                    shape_name = "Ellipse"
+                    confidence = 85
+                else:
+                    shape_name = "Unknown"
+                    confidence = 85
                 
             cv2.drawContours(img, [c], -1, (0, 255, 0), 2)
             
@@ -247,7 +265,7 @@ async def recognize_region(data: ImageData):
         confidence = 0.95
     elif len(approx) == 4:
         ar = w / float(h)
-        shape_name = "Hình vuông" if ar >= 0.85 and ar <= 1.15 else "Hình chữ nhật"
+        shape_name = "Hình vuông" if 0.85 <= ar <= 1.15 else "Hình chữ nhật"
         confidence = 0.92
     elif len(approx) == 5:
         shape_name = "Hình ngũ giác"
@@ -255,11 +273,23 @@ async def recognize_region(data: ImageData):
     elif len(approx) == 6:
         shape_name = "Hình lục giác"
         confidence = 0.88
+    elif len(approx) == 7:
+        shape_name = "Hình thất giác"
+        confidence = 0.88
+    elif len(approx) == 8:
+        shape_name = "Hình bát giác"
+        confidence = 0.88
+    elif len(approx) == 10:
+        shape_name = "Hình ngôi sao"
+        confidence = 0.90
     else:
-        circularity = 4 * np.pi * (area / (peri * peri))
-        if circularity > 0.7:
+        circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
+        if circularity > 0.75:
             shape_name = "Hình tròn"
             confidence = 0.90
+        elif circularity > 0.6:
+            shape_name = "Hình ellipse"
+            confidence = 0.85
 
     return {"predictions": [{"label": shape_name, "score": confidence}]}
 
