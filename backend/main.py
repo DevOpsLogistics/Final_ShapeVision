@@ -82,44 +82,85 @@ async def analyze_contour(data: ImageData):
             # approximate the contour
             peri = cv2.arcLength(c, True)
             approx = cv2.approxPolyDP(c, 0.04 * peri, True)
+            area = cv2.contourArea(c)
+            circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
             
-            # determine shape
+            def get_angle(pt1, pt2, pt0):
+                dx1 = pt1[0][0] - pt0[0][0]
+                dy1 = pt1[0][1] - pt0[0][1]
+                dx2 = pt2[0][0] - pt0[0][0]
+                dy2 = pt2[0][1] - pt0[0][1]
+                return (dx1*dx2 + dy1*dy2) / np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
+
             shape_name = "Object"
             confidence = 80 + np.random.randint(0, 15) # mock confidence
             if len(approx) == 3:
-                shape_name = "Triangle"
+                shape_name = "Tam giác"
                 confidence = 95
             elif len(approx) == 4:
-                (x, y, w, h) = cv2.boundingRect(approx)
-                ar = w / float(h)
-                shape_name = "Square" if 0.85 <= ar <= 1.15 else "Rectangle"
+                # Calculate side lengths
+                d1 = np.linalg.norm(approx[0][0] - approx[1][0])
+                d2 = np.linalg.norm(approx[1][0] - approx[2][0])
+                d3 = np.linalg.norm(approx[2][0] - approx[3][0])
+                d4 = np.linalg.norm(approx[3][0] - approx[0][0])
+                
+                # Check angles (cosine)
+                cosines = []
+                for j in range(4):
+                    cosines.append(get_angle(approx[(j+1)%4], approx[(j-1)%4], approx[j]))
+                
+                max_cos = max([abs(c) for c in cosines])
+                is_rect = max_cos < 0.15 # Approx 90 degrees
+                
+                sides = [d1, d2, d3, d4]
+                max_side = max(sides)
+                min_side = min(sides)
+                all_equal = (max_side - min_side) / max_side < 0.2
+                
+                if is_rect and all_equal:
+                    shape_name = "Hình vuông"
+                elif is_rect and not all_equal:
+                    shape_name = "Hình chữ nhật"
+                elif not is_rect and all_equal:
+                    shape_name = "Hình thoi"
+                else:
+                    # Check parallel sides for parallelogram / trapezoid
+                    shape_name = "Hình bình hành" if (abs(d1-d3)/max(d1,d3) < 0.2 and abs(d2-d4)/max(d2,d4) < 0.2) else "Hình thang"
                 confidence = 92
             elif len(approx) == 5:
-                shape_name = "Pentagon"
+                shape_name = "Ngũ giác"
                 confidence = 88
             elif len(approx) == 6:
-                shape_name = "Hexagon"
+                shape_name = "Lục giác"
                 confidence = 88
             elif len(approx) == 7:
-                shape_name = "Heptagon"
+                shape_name = "Thất giác"
                 confidence = 88
             elif len(approx) == 8:
-                shape_name = "Octagon"
+                shape_name = "Bát giác"
+                confidence = 88
+            elif len(approx) == 9:
+                shape_name = "Cửu giác"
                 confidence = 88
             elif len(approx) == 10:
-                shape_name = "Star"
+                # Could be a 5-pointed star or a decagon
+                shape_name = "Ngôi sao 5 cánh" if circularity < 0.5 else "Thập giác"
+                confidence = 90
+            elif len(approx) == 12:
+                shape_name = "Ngôi sao 6 cánh / Thập nhị giác"
                 confidence = 90
             else:
-                area = cv2.contourArea(c)
-                circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
-                if circularity > 0.75:
-                    shape_name = "Circle"
+                if circularity > 0.8:
+                    shape_name = "Hình tròn"
                     confidence = 85
                 elif circularity > 0.6:
-                    shape_name = "Ellipse"
+                    shape_name = "Hình ellipse"
                     confidence = 85
+                elif circularity > 0.4:
+                    shape_name = "Bán nguyệt / Vòm"
+                    confidence = 80
                 else:
-                    shape_name = "Unknown"
+                    shape_name = "Đa giác phức tạp"
                     confidence = 85
                 
             cv2.drawContours(img, [c], -1, (0, 255, 0), 2)
@@ -175,34 +216,91 @@ async def detect_multi(data: ImageData):
             # Approximate the contour to determine shape
             peri = cv2.arcLength(c, True)
             approx = cv2.approxPolyDP(c, 0.04 * peri, True)
+            circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
+            
+            def get_angle(pt1, pt2, pt0):
+                dx1 = pt1[0][0] - pt0[0][0]
+                dy1 = pt1[0][1] - pt0[0][1]
+                dx2 = pt2[0][0] - pt0[0][0]
+                dy2 = pt2[0][1] - pt0[0][1]
+                return (dx1*dx2 + dy1*dy2) / np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
             
             shape_name = "Object"
             confidence = 0.8 + (np.random.randint(0, 15) / 100) # mock confidence 80-95%
             color = '#34A853'
             
             if len(approx) == 3:
-                shape_name = "Tam giác"
+                shape_name = "Hình tam giác"
                 confidence = 0.95
                 color = '#F59E0B'
             elif len(approx) == 4:
-                ar = w / float(h)
-                shape_name = "Hình vuông" if ar >= 0.85 and ar <= 1.15 else "Hình chữ nhật"
+                d1 = np.linalg.norm(approx[0][0] - approx[1][0])
+                d2 = np.linalg.norm(approx[1][0] - approx[2][0])
+                d3 = np.linalg.norm(approx[2][0] - approx[3][0])
+                d4 = np.linalg.norm(approx[3][0] - approx[0][0])
+                
+                cosines = []
+                for j in range(4):
+                    cosines.append(get_angle(approx[(j+1)%4], approx[(j-1)%4], approx[j]))
+                
+                max_cos = max([abs(ang) for ang in cosines])
+                is_rect = max_cos < 0.15
+                
+                sides = [d1, d2, d3, d4]
+                max_side = max(sides)
+                min_side = min(sides)
+                all_equal = (max_side - min_side) / max_side < 0.2
+                
+                if is_rect and all_equal:
+                    shape_name = "Hình vuông"
+                elif is_rect and not all_equal:
+                    shape_name = "Hình chữ nhật"
+                elif not is_rect and all_equal:
+                    shape_name = "Hình thoi"
+                else:
+                    shape_name = "Hình bình hành" if (abs(d1-d3)/max(d1,d3) < 0.2 and abs(d2-d4)/max(d2,d4) < 0.2) else "Hình thang"
                 confidence = 0.92
                 color = '#3B82F6'
             elif len(approx) == 5:
-                shape_name = "Ngũ giác"
+                shape_name = "Hình ngũ giác"
                 confidence = 0.88
                 color = '#8B5CF6'
             elif len(approx) == 6:
-                shape_name = "Lục giác"
+                shape_name = "Hình lục giác"
                 confidence = 0.88
                 color = '#8B5CF6'
+            elif len(approx) == 7:
+                shape_name = "Hình thất giác"
+                confidence = 0.88
+                color = '#8B5CF6'
+            elif len(approx) == 8:
+                shape_name = "Hình bát giác"
+                confidence = 0.88
+                color = '#8B5CF6'
+            elif len(approx) == 9:
+                shape_name = "Hình cửu giác"
+                confidence = 0.88
+                color = '#8B5CF6'
+            elif len(approx) == 10:
+                shape_name = "Ngôi sao 5 cánh" if circularity < 0.5 else "Hình thập giác"
+                confidence = 0.90
+                color = '#F43F5E'
+            elif len(approx) == 12:
+                shape_name = "Ngôi sao 6 cánh / Thập nhị giác"
+                confidence = 0.90
+                color = '#F43F5E'
             else:
-                # To differentiate circle from generic shape, check circularity
-                circularity = 4 * np.pi * (area / (peri * peri))
-                if circularity > 0.7:
+                if circularity > 0.8:
                     shape_name = "Hình tròn"
                     confidence = 0.85
+                    color = '#06B6D4'
+                elif circularity > 0.6:
+                    shape_name = "Hình ellipse"
+                    confidence = 0.85
+                    color = '#06B6D4'
+                elif circularity > 0.4:
+                    shape_name = "Hình bán nguyệt"
+                    confidence = 0.80
                     color = '#06B6D4'
                 else:
                     shape_name = "Vật thể không xác định"
@@ -256,16 +354,47 @@ async def recognize_region(data: ImageData):
     (x, y, w, h) = cv2.boundingRect(largest_contour)
     peri = cv2.arcLength(largest_contour, True)
     approx = cv2.approxPolyDP(largest_contour, 0.04 * peri, True)
+    circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
     
-    shape_name = "Vật thể không xác định"
+    def get_angle(pt1, pt2, pt0):
+        dx1 = pt1[0][0] - pt0[0][0]
+        dy1 = pt1[0][1] - pt0[0][1]
+        dx2 = pt2[0][0] - pt0[0][0]
+        dy2 = pt2[0][1] - pt0[0][1]
+        return (dx1*dx2 + dy1*dy2) / np.sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10)
+
+    shape_name = "Đa giác phức tạp"
     confidence = 0.85
     
     if len(approx) == 3:
         shape_name = "Hình tam giác"
         confidence = 0.95
     elif len(approx) == 4:
-        ar = w / float(h)
-        shape_name = "Hình vuông" if 0.85 <= ar <= 1.15 else "Hình chữ nhật"
+        d1 = np.linalg.norm(approx[0][0] - approx[1][0])
+        d2 = np.linalg.norm(approx[1][0] - approx[2][0])
+        d3 = np.linalg.norm(approx[2][0] - approx[3][0])
+        d4 = np.linalg.norm(approx[3][0] - approx[0][0])
+        
+        cosines = []
+        for j in range(4):
+            cosines.append(get_angle(approx[(j+1)%4], approx[(j-1)%4], approx[j]))
+        
+        max_cos = max([abs(c) for c in cosines])
+        is_rect = max_cos < 0.15
+        
+        sides = [d1, d2, d3, d4]
+        max_side = max(sides)
+        min_side = min(sides)
+        all_equal = (max_side - min_side) / max_side < 0.2
+        
+        if is_rect and all_equal:
+            shape_name = "Hình vuông"
+        elif is_rect and not all_equal:
+            shape_name = "Hình chữ nhật"
+        elif not is_rect and all_equal:
+            shape_name = "Hình thoi"
+        else:
+            shape_name = "Hình bình hành" if (abs(d1-d3)/max(d1,d3) < 0.2 and abs(d2-d4)/max(d2,d4) < 0.2) else "Hình thang"
         confidence = 0.92
     elif len(approx) == 5:
         shape_name = "Hình ngũ giác"
@@ -279,17 +408,25 @@ async def recognize_region(data: ImageData):
     elif len(approx) == 8:
         shape_name = "Hình bát giác"
         confidence = 0.88
+    elif len(approx) == 9:
+        shape_name = "Hình cửu giác"
+        confidence = 0.88
     elif len(approx) == 10:
-        shape_name = "Hình ngôi sao"
+        shape_name = "Ngôi sao 5 cánh" if circularity < 0.5 else "Hình thập giác"
+        confidence = 0.90
+    elif len(approx) == 12:
+        shape_name = "Ngôi sao 6 cánh / Thập nhị giác"
         confidence = 0.90
     else:
-        circularity = 4 * np.pi * (area / (peri * peri)) if peri > 0 else 0
-        if circularity > 0.75:
+        if circularity > 0.8:
             shape_name = "Hình tròn"
             confidence = 0.90
         elif circularity > 0.6:
             shape_name = "Hình ellipse"
             confidence = 0.85
+        elif circularity > 0.4:
+            shape_name = "Hình bán nguyệt"
+            confidence = 0.80
 
     return {"predictions": [{"label": shape_name, "score": confidence}]}
 
